@@ -13,13 +13,14 @@ All the three are very cleanly implemented using docker and runs in its own cont
 
 ``docker-compose.yaml`` file sets up the individual docker contaiers while also harbouring communication between individual containers.
 
-# Setup
+## Setup
 
 1. Clone the repository.
 2. One needs to install `docker` and `docker-compose` in order to run this implementation.
 3. All the other dependencies are managed by the individual Dockerfiles.
 4. Navidate to the main folder.
-# Run
+
+## Run
 
 Using command prompt,
 
@@ -28,9 +29,9 @@ Using command prompt,
 
 After all the containers are up and running, on the command prompt we can see the details of individual containers running and printing messages.
 
-# Understanding of the code
+## Understanding of the code
 
-```app1```
+###```app1```
 
 `app.py` helps us to expose the REST API in the form of `/get/prediction/v1.0/imageid` and `/get/prediction/v1.0/imageid/<imageid>`.
 These two endpoints fetches the data from the mongodb. The first endpoint fetches all the data while the second one allows to selectively fetch the data based on image id.
@@ -46,12 +47,12 @@ http://localhost:5000/get/prediction/v1.0/imageid/31231231231
 for results per image id where `31231231231` is an example of image id.
 
 
-# ```app2```
+### ```app2```
 
 `mqtt_client.py` brings about the implementation of mqtt client using python. This client acts as a `subscriber` which subscribes to a topic `new_prediction`. We make use of mosquitto_pub cli to publish messages to the broker using the same topic. Once a message is received at the client, we first validate if the message follows a schema/pattern. This is achived by specifying the pattern in the ``schemaValidator.json``.
 Once the message is validated, it is inserted into a mongo databse and is now ready to consumed by the rest api.
 
-```docker-mosquitto``` is the server implementation of MQTT broker.
+### ```docker-mosquitto``` is the server implementation of MQTT broker.
 
 All the three have individual Dockerfiles which enables them to run on a container.
 
@@ -71,6 +72,6 @@ mosquitto_pub -h localhost -u some_user -P some_pass -p 1883 -d -t new_predictio
 The above example follows the schema as outlined in the schemaValidator.json. 
 
 
-# tearing down of the container
+## tearing down of the container
 
 ```docker-compose down```
