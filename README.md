@@ -35,7 +35,18 @@ After all the containers are up and running, on the command prompt we can see th
 `app.py` helps us to expose the REST API in the form of `/get/prediction/v1.0/imageid` and `/get/prediction/v1.0/imageid/<imageid>`.
 These two endpoints fetches the data from the mongodb. The first endpoint fetches all the data while the second one allows to selectively fetch the data based on image id.
 
-```app2```
+One can use the rest api to view all classification result by typing the following on the browser:
+```
+http://localhost:5000/get/prediction/v1.0/imageid/
+```
+or
+```
+http://localhost:5000/get/prediction/v1.0/imageid/31231231231
+```
+for results per image id where `31231231231` is an example of image id.
+
+
+# ```app2```
 
 `mqtt_client.py` brings about the implementation of mqtt client using python. This client acts as a `subscriber` which subscribes to a topic `new_prediction`. We make use of mosquitto_pub cli to publish messages to the broker using the same topic. Once a message is received at the client, we first validate if the message follows a schema/pattern. This is achived by specifying the pattern in the ``schemaValidator.json``.
 Once the message is validated, it is inserted into a mongo databse and is now ready to consumed by the rest api.
@@ -56,6 +67,9 @@ example
 ```
 mosquitto_pub -h localhost -u some_user -P some_pass -p 1883 -d -t new_prediction -m "{\"status\":\"complete\",\"imagePath\":\"20180907\\1536311270718.jpg\",\"imageId\":\"1536311270718\",\"output\":[{\"bbox\":[1008.8831787109375,280.6226501464844,1110.0245361328125,380.72021484375],\"probability\":0.9725130796432495,\"label\":\"nail\",\"result\":\"good\"}]}"
 ```
+
+The above example follows the schema as outlined in the schemaValidator.json. 
+
 
 # tearing down of the container
 
