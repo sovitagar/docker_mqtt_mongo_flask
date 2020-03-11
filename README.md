@@ -16,5 +16,14 @@ All the three are very cleanly implemented using docker and runs in its own cont
 # Setup
 
 1. Clone the repository.
-2. One needs to install docker and docker-compose in order to run this implementation.
-3. 
+2. One needs to install `docker` and `docker-compose` in order to run this implementation.
+3. All the other dependencies are managed by the individual Dockerfiles.
+
+# Run
+
+1. docker build using ``` docker-compose build```
+2. docker run using ```docker-compose up```
+
+# tearing down of the container
+
+```docker-compose down```
