@@ -18,11 +18,19 @@ All the three are very cleanly implemented using docker and runs in its own cont
 1. Clone the repository.
 2. One needs to install `docker` and `docker-compose` in order to run this implementation.
 3. All the other dependencies are managed by the individual Dockerfiles.
-
+4. Navidate to the main folder.
 # Run
+
+Using command prompt,
 
 1. docker build using ``` docker-compose build```
 2. docker run using ```docker-compose up```
+
+After all the containers are up and running, on the command prompt we can see the details of individual containers running and printing messages.
+
+# Understanding of the code
+
+```APP1```
 
 # tearing down of the container
 
