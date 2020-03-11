@@ -31,7 +31,7 @@ After all the containers are up and running, on the command prompt we can see th
 
 ## Understanding of the code
 
-###```app1```
+### ```app1```
 
 `app.py` helps us to expose the REST API in the form of `/get/prediction/v1.0/imageid` and `/get/prediction/v1.0/imageid/<imageid>`.
 These two endpoints fetches the data from the mongodb. The first endpoint fetches all the data while the second one allows to selectively fetch the data based on image id.
