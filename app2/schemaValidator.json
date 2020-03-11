@@ -1,0 +1,35 @@
+{
+    "type": "object",
+    "required": ["status", "imagePath", "imageId", "output"],
+    "properties": {
+        "status": {
+            "type": "string",
+            "enum": ["complete", "processing"]
+        },
+        "imagePath": {
+            "type": "string"
+        },
+        "imageId": {
+            "type": "string"
+        },
+        "output": {
+            "type": "array",
+            "required": ["probability", "label", "result"],
+            "properties": {
+                "probability": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "must be a double and is required"
+                },
+                "label": {
+                    "type": "string",
+                    "description": "must be a string and is required"
+                },
+                "result": {
+                    "type": "string",
+                    "description": "must be a string and is required"
+                }
+            }
+        }
+    }}

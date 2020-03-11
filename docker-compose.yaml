@@ -1,0 +1,54 @@
+version: "3"
+volumes:
+  mongostorage:
+
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+
+  web:
+    build:
+      context: app1
+    command: app1 -u app.py
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/todo
+    links:
+      - mongodb
+    restart: always
+    networks:
+      - app-tier
+
+  web-mqtt:
+    build:
+      context: ./app2
+    image: web-mqtt-image
+    entrypoint: app1 -u mqtt-client.py
+    depends_on:
+      - mongodb
+      - mqtt
+    networks:
+      - app-tier
+    restart: on-failure
+
+  mongodb:
+    image: mongo:3.0.2
+    volumes:
+      - mongostorage:/data/db
+    ports:
+      - "27017:27017"
+    restart: on-failure
+    networks:
+      - app-tier
+
+  mqtt:
+    build:
+      context: ./docker-mosquitto
+    restart: on-failure
+    ports:
+      - "1883:1883"
+    networks:
+      - app-tier
