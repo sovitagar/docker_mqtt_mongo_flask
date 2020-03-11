@@ -30,7 +30,32 @@ After all the containers are up and running, on the command prompt we can see th
 
 # Understanding of the code
 
-```APP1```
+```app1```
+
+`app.py` helps us to expose the REST API in the form of `/get/prediction/v1.0/imageid` and `/get/prediction/v1.0/imageid/<imageid>`.
+These two endpoints fetches the data from the mongodb. The first endpoint fetches all the data while the second one allows to selectively fetch the data based on image id.
+
+```app2```
+
+`mqtt_client.py` brings about the implementation of mqtt client using python. This client acts as a `subscriber` which subscribes to a topic `new_prediction`. We make use of mosquitto_pub cli to publish messages to the broker using the same topic. Once a message is received at the client, we first validate if the message follows a schema/pattern. This is achived by specifying the pattern in the ``schemaValidator.json``.
+Once the message is validated, it is inserted into a mongo databse and is now ready to consumed by the rest api.
+
+```docker-mosquitto``` is the server implementation of MQTT broker.
+
+All the three have individual Dockerfiles which enables them to run on a container.
+
+## Uisng mosquitto_pub for publishing messages
+
+1. First we need to install mosquitto_pub and mosquitto_sub cli tool, freely avavilable on the internet.
+2. Next navigate to the folder where mosquitto was installed.
+3. Use the below syntax to transmit a message - 
+```
+mosquitto_pub -t new_prediction -m <JSON>
+```
+example
+```
+mosquitto_pub -h localhost -u some_user -P some_pass -p 1883 -d -t new_prediction -m "{\"status\":\"complete\",\"imagePath\":\"20180907\\1536311270718.jpg\",\"imageId\":\"1536311270718\",\"output\":[{\"bbox\":[1008.8831787109375,280.6226501464844,1110.0245361328125,380.72021484375],\"probability\":0.9725130796432495,\"label\":\"nail\",\"result\":\"good\"}]}"
+```
 
 # tearing down of the container
 
