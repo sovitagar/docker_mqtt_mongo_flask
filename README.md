@@ -13,4 +13,8 @@ All the three are very cleanly implemented using docker and runs in its own cont
 
 ``docker-compose.yaml`` file sets up the individual docker contaiers while also harbouring communication between individual containers.
 
+# Setup
 
+1. Clone the repository.
+2. One needs to install docker and docker-compose in order to run this implementation.
+3. 
