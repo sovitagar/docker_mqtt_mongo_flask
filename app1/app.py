@@ -16,12 +16,11 @@ mclient = MongoClient("mongodb", 27017)
 db = mclient.demo
 collection = db["mycol"]
 
-
+# ToDo
 def get_prediction(db_data):
     # function to get a prediction from the database
     # based on probability value
-    prediction = {}
-    best_prediction = {}
+
     len_response = len(db_data["output"])
     if len_response > 1:
         max_prob_index = 0
@@ -32,30 +31,20 @@ def get_prediction(db_data):
                 max_prob_val = cur_prob_val
                 max_prob_index = i
 
-        prediction = {"imageId": db_data["imageId"], "probability": db_data["output"][max_prob_index]["probability"],
-                      "label": db_data["output"][max_prob_index]["label"],
-                      "result": db_data["output"][max_prob_index]["result"]}
-
-        best_prediction["prediction"] = prediction
-        print("best_prediction ", prediction)
-        # weak_prediction = get_weak_prediction(response)
-        # prediction["bestPrediction"] = best_prediction
-        # prediction["weakPrediction"] = weak_prediction
-
+        prediction = {
+            "imageId": db_data["imageId"],
+            "probability": db_data["output"][max_prob_index]["probability"],
+            "label": db_data["output"][max_prob_index]["label"],
+            "result": db_data["output"][max_prob_index]["result"],
+        }
     else:
-        #prediction["imageId"] = db_data["imageId"]
-        #prediction["probability"] = db_data["output"][0]["probability"]
-        #prediction["label"] = db_data["output"][0]["label"]
-        #prediction["result"] = db_data["output"][0]["result"]
-
         prediction = {
             "imageId": db_data["imageId"],
             "probability": db_data["output"][0]["probability"],
             "label": db_data["output"][0]["label"],
             "result": db_data["output"][0]["result"],
         }
-        best_prediction["prediction"] = prediction
-    return best_prediction
+    return json.dumps(prediction)
 
 
 def get_weak_prediction(db_data):
@@ -86,8 +75,6 @@ def get_all_predictions():
 
     output = []
     for rows in collection.find():
-        # len_output = len(rows["output"])
-        # print(len_output, flush=True)
         output.append({"imageId": rows["imageId"], "output": rows["output"]})
 
     return jsonify({"result": output})
@@ -99,14 +86,43 @@ def get_prediction(imageid):
     db_values = collection.find_one({"imageId": imageid})
 
     if db_values:
-        output_prediction = get_prediction(db_values)
-        weak_predictions = get_weak_prediction(db_values)
-        print(output_prediction, flush=True)
-        return jsonify({"result": output_prediction, "weak_predictions": weak_predictions})
+        len_response = len(db_values["output"])
+        if len_response > 1:
+            max_prob_index = 0
+            max_prob_val = db_values["output"][0]["probability"]
+            for i in range(1, len_response):
+                cur_prob_val = db_values["output"][i]["probability"]
+                if cur_prob_val > max_prob_val:
+                    max_prob_val = cur_prob_val
+                    max_prob_index = i
+
+            best_prediction = {
+                "imageId": db_values["imageId"],
+                "probability": db_values["output"][max_prob_index]["probability"],
+                "label": db_values["output"][max_prob_index]["label"],
+                "result": db_values["output"][max_prob_index]["result"],
+            }
+
+            weak_predictions = get_weak_prediction(db_values)
+        else:
+            best_prediction = {
+                "imageId": db_values["imageId"],
+                "probability": db_values["output"][0]["probability"],
+                "label": db_values["output"][0]["label"],
+                "result": db_values["output"][0]["result"],
+            }
+
+            weak_predictions = "No weak predictions"
+
+        return jsonify(
+            {"best_prediction": best_prediction, "weak_predictions": weak_predictions}
+        )
     else:
-        output_prediction = "No results found"
-        weak_predictions = "None available"
-        return jsonify({"result": output_prediction, "weak_predictions": weak_predictions})
+        best_prediction = "No results found"
+        weak_predictions = "No results found"
+        return jsonify(
+            {"result": best_prediction, "weak_predictions": weak_predictions}
+        )
 
 
 @app.errorhandler(404)
