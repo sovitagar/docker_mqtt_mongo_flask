@@ -11,14 +11,14 @@ The code is structured in three levels.
 
 All the three are very cleanly implemented using docker and runs in its own container. And is ``mongodb`` which is also run on a container.
 
-``docker-compose.yaml`` file sets up the individual docker contaiers while also harbouring communication between individual containers.
+``docker-compose.yaml`` file sets up the individual docker containers while also harbouring communication between individual containers.
 
 ## Setup
 
 1. Clone the repository.
 2. One needs to install `docker` and `docker-compose` in order to run this implementation.
 3. All the other dependencies are managed by the individual Dockerfiles.
-4. Navidate to the main folder.
+4. Navigate to the main folder.
 
 ## Run
 
@@ -49,16 +49,16 @@ for results per image id where `31231231231` is an example of image id.
 
 ### ```app2```
 
-`mqtt_client.py` brings about the implementation of mqtt client using python. This client acts as a `subscriber` which subscribes to a topic `new_prediction`. We make use of mosquitto_pub cli to publish messages to the broker using the same topic. Once a message is received at the client, we first validate if the message follows a schema/pattern. This is achived by specifying the pattern in the ``schemaValidator.json``.
-Once the message is validated, it is inserted into a mongo databse and is now ready to consumed by the rest api.
+`mqtt_client.py` brings about the implementation of mqtt client using python. This client acts as a `subscriber` which subscribes to a topic `new_prediction`. We make use of mosquitto_pub cli to publish messages to the broker using the same topic. Once a message is received at the client, we first validate if the message follows a schema/pattern. This is achieved by specifying the pattern in the ``schemaValidator.json``.
+Once the message is validated, it is inserted into a mongo database and is now ready to consumed by the rest api.
 
 ### ```docker-mosquitto``` is the server implementation of MQTT broker.
 
 All the three have individual Dockerfiles which enables them to run on a container.
 
-## Uisng mosquitto_pub for publishing messages
+## Using mosquitto_pub for publishing messages
 
-1. First we need to install mosquitto_pub and mosquitto_sub cli tool, freely avavilable on the internet.
+1. First we need to install mosquitto_pub and mosquitto_sub cli tool, freely available on the internet.
 2. Next navigate to the folder where mosquitto was installed.
 3. Use the below syntax to transmit a message - 
 ```
